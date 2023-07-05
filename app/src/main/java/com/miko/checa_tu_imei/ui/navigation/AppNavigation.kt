@@ -17,6 +17,7 @@ import com.miko.checa_tu_imei.ui.view.Formulario3Screen
 import com.miko.checa_tu_imei.ui.view.Formulario4Screen
 import com.miko.checa_tu_imei.ui.view.FormularioPrincipalScreen
 import com.miko.checa_tu_imei.ui.view.HomeSreen
+import com.miko.checa_tu_imei.ui.view.PreguntasFrecuentesScreen
 import com.miko.checa_tu_imei.ui.view.RespuestaConsulta
 import com.miko.checa_tu_imei.ui.view.RespuestaConsultaScreen
 import com.miko.checa_tu_imei.ui.view.SplashScreen
@@ -94,6 +95,14 @@ fun AppNavigation(
         }
         composable(route = AppScreens.Formulario4Screen.route){
             Formulario4Screen(
+                navHostController = navController,
+                viewModel = viewModel,
+                isDarkTheme = isDarkTheme,
+                icon =icon
+            )
+        }
+        composable(route = AppScreens.PreguntasFrecuentesScreen.route){
+            PreguntasFrecuentesScreen(
                 navHostController = navController,
                 viewModel = viewModel,
                 isDarkTheme = isDarkTheme,

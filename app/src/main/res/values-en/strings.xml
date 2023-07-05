@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_language">en</string>
+    <string name="app_name">checa_tu_imei</string>
+
+    <string name="show_less">Show less</string>
+    <string name="show_more">Show more</string>
+    <!-- DRAWER -->
+    <string name="drawer_inicio">Home</string>
+    <string name="drawer_empresas_renteseg">Renteseg Companies</string>
+    <string name="drawer_preguntas_frecuentes">Frequently Asked Questions</string>
+    <string name="drawer_formulario">Form</string>
+
+    <!-- Home Screen  -->
+    <string name="consultar_imei">Check IMEI</string>
+    <string name="faltan">Missing</string>
+    <string name="caracteres">characters</string>
+    <string name="verificar">Verify</string>
+    <string name="aplicativo_permitir_consulta">This application allows you to check the IMEI code online</string>
+    <string name="no_soy_robot">I\'m not a robot </string>
+
+    <!-- Formulario 1 screen -->
+    <string name="reporte_imei">IMEI Report</string>
+    <string name="ingresar_datos_personales">Enter your personal information for the consultation form</string>
+    <string name="nombre">Name *</string>
+    <string name="apellidos">Last Name *</string>
+    <string name="tipo_documento">Type of Legal Document *</string>
+    <string name="numero_documento">Legal Document Number *</string>
+    <string name="entrada_invalida">Invalid input</string>
+    <string name="error">Error</string>
+    <string name="correo_electronico">Email *</string>
+    <string name="correo_invalido">The email is invalid</string>
+    <string name="continuar">Continue</string>
+
+    <!-- Formulario 2 screen -->
+    <string name="datos_equipo_reportar">Enter the details of the device to report</string>
+    <string name="marca_movil">Mobile brand *</string>
+    <string name="modelo_movil">Mobile model *</string>
+    <string name="concesionario_movil">Mobile dealer *</string>
+    <string name="numero_movil">Mobile number used in the device *</string>
+
+    <!-- Formulario 3 Screen -->
+    <string name="datos_complementarios">Additional Information</string>
+    <string name="codigo_bloqueo">Lock Code *</string>
+    <string name="motivo_consulta">Reason for Consultation *</string>
+    <string name="numero_telefono_contacto">Contact Phone Number *</string>
+
+    <!-- Formulario 4 Screen -->
+    <string name="finalizar_reporte">Finish Report: </string>
+    <string name="comentarios">Comments *</string>
+    <string name="adjuntar_archivo">Attach File (PDF or images)</string>
+    <string name="buscar_archivo">Search file</string>
+    <string name="archivo_seleccionado">Selected File</string>
+    <string name="finalizar">Finish</string>
+
+    <!-- Formulario Principal Screen -->
+    <string name="modo_oscuro">Dark Mode</string>
+    <string name="preguntas_frecuentes">Frequently Asked Questions:</string>
+    <string name="mensaje_email">If your phone\'s IMEI does not appear in this database despite having reported it as stolen or lost to your service provider, or if you encounter any issues with unlocking your phone after its recovery, please contact us at reportaimei@osiptel.gob.pe or complete the form you will find at the following link.</string>
+    <string name="formulario">Form</string>
+    <string name="regresar">Go Back</string>
+
+    <!-- Respuesta Consulta Screen -->
+    <string name="respuesta">Response</string>
+    <string name="respuesta_consulta">The response to your query is:</string>
+    <string name="imei_no_encontrado">The IMEI is not associated with any reported device.</string>
+    <string name="numero">Number:</string>
+    <string name="imei_lista_negra">The IMEI is blacklisted.</string>
+    <string name="estado_equipo">Device Status</string>
+    <string name="operador">Service Provider</string>
+    <string name="fecha">Date</string>
+    <string name="ir_inicio">Go to Home</string>
+    <string name="enviar_a">Send to</string>
+    <string name="compartir">Share</string>
+    <string name="imagen_guardada">Image saved</string>
+
+    <!-- Time and date time picker -->
+    <string name="fecha_reporte">Report Date</string>
+    <string name="hora_reporte">Report Time</string>
+
+
+</resources>

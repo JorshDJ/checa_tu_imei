@@ -4,6 +4,7 @@ import com.miko.checa_tu_imei.data.model.EmpresasResponse
 import com.miko.checa_tu_imei.data.model.ImeiResponse
 import com.miko.checa_tu_imei.data.model.MarcasResponse
 import com.miko.checa_tu_imei.data.model.ModelosResponse
+import com.miko.checa_tu_imei.data.model.PreguntasFrecuentesResponse
 import com.miko.checa_tu_imei.data.model.ProblemasDetectadosResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -52,4 +53,13 @@ class ImeiService @Inject constructor(private val imeiApi: ImeiApi) {
             problemasDetectados.body() ?: emptyList()
         }
     }
+
+    suspend fun getPreguntasFrecuentes(): List<PreguntasFrecuentesResponse> {
+        return withContext(Dispatchers.IO) {
+            val preguntasFrecuentes = imeiApi.getPreguntasFrecuentes()
+            preguntasFrecuentes.body() ?: emptyList()
+        }
+    }
+
+
 }

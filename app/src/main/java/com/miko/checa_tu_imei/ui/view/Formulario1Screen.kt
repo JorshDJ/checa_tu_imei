@@ -28,6 +28,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedButton
@@ -50,6 +53,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -86,16 +90,12 @@ fun Formulario1(
     isDarkTheme: MutableState<Boolean>,
     icon: @Composable() (() -> Unit)?,
 ){
-
     //variable para el scroll
     val scrollState = rememberScrollState()
 
     //Variables para los text field
     val nombre = remember { mutableStateOf("") }
     val apellidos = remember { mutableStateOf("") }
-    val tipoDocumento = remember { mutableStateOf("") }
-    val numeroDocumento = remember { mutableStateOf("") }
-    val correo = remember { mutableStateOf("") }
 
     //variable para el dropdown TipoDocumento
     var expandedTipoDocumento by remember { mutableStateOf(false) }
@@ -109,25 +109,17 @@ fun Formulario1(
     )
     var selectedOptionTipoDocumento = remember { mutableStateOf(itemsTipoDocumento[0]) }
 
-    //para validacion de Número de documento
-    //var tipoDoc by rememberSaveable { mutableStateOf("") }
-    var isErrorTipoDoc by rememberSaveable { mutableStateOf(false) }
-    //val charLimitTipoDoc = 16
-    fun validateTipoDoc(text2: String) {
-        isErrorTipoDoc = selectedOptionTipoDocumento.value.nombreDoc.length > selectedOptionTipoDocumento.value.charLimit
-    }
 
     //Variable para validación de NumeroDoc
     var textNumDoc by remember { mutableStateOf("") }
     var isErrorNumDoc by remember { mutableStateOf(false) }
 
     //Variables para validación de email
-    var textEmail by remember { mutableStateOf("") }
-    var isErrorEmail by remember { mutableStateOf(false) }
+    var textEmail = remember { mutableStateOf("") }
+    var isErrorEmail = remember { mutableStateOf(false) }
     fun validateEmail(str: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(str).matches()
     }
-
 
     MaterialTheme() {
         Column(modifier = Modifier
@@ -141,7 +133,7 @@ fun Formulario1(
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
-                                "Reporte IMEI",
+                                stringResource(R.string.reporte_imei),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -155,9 +147,9 @@ fun Formulario1(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* doSomething() */ }) {
+                            IconButton(onClick = { navHostController.navigate(AppScreens.PreguntasFrecuentesScreen.route) }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Favorite,
+                                    imageVector = Icons.Outlined.Info,
                                     contentDescription = "Localized description"
                                 )
                             }
@@ -183,7 +175,7 @@ fun Formulario1(
                                         .fillMaxWidth()
                                         .padding(top = 10.dp, bottom = 10.dp, start = 30.dp, end = 30.dp)
                                         .wrapContentSize(align = Alignment.Center),
-                                    text = "Ingresa tus datos personales para el formulario de consulta",
+                                    text = stringResource(R.string.ingresar_datos_personales),
 
                                     fontWeight = FontWeight.Bold,
                                     color = Color(android.graphics.Color.parseColor("#599BCC")),
@@ -212,8 +204,8 @@ fun Formulario1(
                                     modifier = Modifier.fillMaxWidth(),
                                     value = nombre.value,
                                     onValueChange = { nombre.value = it },
-                                    label = { Text("Nombre *") } ,
-                                    placeholder = { Text("Nombre * ") },
+                                    label = { Text(stringResource(R.string.nombre)) } ,
+                                    placeholder = { Text(stringResource(R.string.nombre)) },
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -222,11 +214,12 @@ fun Formulario1(
                                     modifier = Modifier.fillMaxWidth(),
                                     value = apellidos.value,
                                     onValueChange = { apellidos.value = it },
-                                    label = { Text("Apellidos *") } ,
-                                    placeholder = { Text("Apellidos *") },
+                                    label = { Text(stringResource(R.string.apellidos)) } ,
+                                    placeholder = { Text(stringResource(R.string.apellidos)) },
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
 
+                                //Para validación de Tipo de documento legal
                                 ExposedDropdownMenuBox(
                                     modifier = Modifier.fillMaxWidth(),
                                     expanded = expandedTipoDocumento,
@@ -238,7 +231,7 @@ fun Formulario1(
                                         readOnly = true,
                                         value = selectedOptionTipoDocumento.value.nombreDoc,
                                         onValueChange = {},
-                                        label = { Text("Tipo de documento legal *") },
+                                        label = { Text(stringResource(R.string.tipo_documento)) },
                                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTipoDocumento) },
                                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                                     )
@@ -266,8 +259,8 @@ fun Formulario1(
                                 OutlinedTextField(
                                     modifier = Modifier.fillMaxWidth(),
                                     value = textNumDoc,
-                                    label = { Text("Numero de documento legal *") } ,
-                                    placeholder = { Text("Numero de documento legal *") },
+                                    label = { Text(stringResource(R.string.numero_documento)) } ,
+                                    placeholder = { Text(stringResource(R.string.numero_documento)) },
                                     onValueChange = { input ->
                                         val option = selectedOptionTipoDocumento.value
                                         val regex = if (option.onlyNumbers) "[^0-9]".toRegex() else "[^a-zA-Z0-9]".toRegex()
@@ -289,14 +282,14 @@ fun Formulario1(
                                             isErrorNumDoc && remainingCharacters > 0 -> {
                                                 Text(
                                                     modifier = Modifier.fillMaxWidth(),
-                                                    text = "Faltan $remainingCharacters caracteres",
+                                                    text = stringResource(R.string.faltan) +" $remainingCharacters "+ stringResource(R.string.caracteres),
                                                     color = MaterialTheme.colorScheme.error
                                                 )
                                             }
                                             isErrorNumDoc && remainingCharacters <= 0 -> {
                                                 Text(
                                                     modifier = Modifier.fillMaxWidth(),
-                                                    text = "La entrada es inválida",
+                                                    text = stringResource(R.string.entrada_invalida),
                                                     color = MaterialTheme.colorScheme.error
                                                 )
                                             }
@@ -304,83 +297,18 @@ fun Formulario1(
                                     },
                                     trailingIcon = {
                                         if (isErrorNumDoc)
-                                            Icon(Icons.Filled.Favorite, "error", tint = MaterialTheme.colorScheme.error)
+                                            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
                                     },
                                     keyboardOptions = KeyboardOptions(keyboardType = if (selectedOptionTipoDocumento.value.onlyNumbers) KeyboardType.Number else KeyboardType.Text)
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
 
-
                                 //OutlinedTextField CON VALIDACIÓN DE CORREO ELECTRÓNICO
-                                OutlinedTextField(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    value = textEmail,
-                                    onValueChange = {
-                                        textEmail = it
-                                        println(textEmail)
-                                        isErrorEmail = !validateEmail(textEmail)
-                                        println(validateEmail(textEmail))
-                                    },
-                                    label = { Text("Correo electrónico *") } ,
-                                    placeholder = { Text("Correo electrónico *") },
-                                    singleLine = true,
-                                    isError =  isErrorEmail ,
-                                    supportingText = {
-                                        if (isErrorEmail) {
-                                            Text(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                text = "El correo electrónico es inválido",
-                                                color = MaterialTheme.colorScheme.error
-                                            )
-                                        }
-                                    },
-                                    trailingIcon = {
-                                        if (isErrorEmail)
-                                            Icon(Icons.Filled.Favorite,"error", tint = MaterialTheme.colorScheme.error)
-                                    },
-                                    //keyboardActions = KeyboardActions(onDone = { isError = !validateEmail(text) })
-                                )
-                                //
+                                CustomOutlinedTextField(textEmail, isErrorEmail, ::validateEmail)
+
                                 Spacer(modifier = Modifier.height(30.dp))
-                                Row() {
 
-                                    ElevatedButton(
-                                        modifier = Modifier.weight(1f),
-
-                                        onClick = {
-                                            navHostController.navigate( AppScreens.Formulario2Screen.route )
-                                            /*
-                                            //PARA VALIDAR
-                                            if (nombre.value.isBlank() ||
-                                                apellidos.value.isBlank() ||
-                                                tipoDocumento.value.isBlank() ||
-                                                numeroDocumento.value.isBlank() ||
-                                                correo.value.isBlank()
-                                                // Mostrar un mensaje al usuario indicando que todos los campos son obligatorios
-                                            ) {
-
-                                            } else {
-                                                // Procesar los datos del formulario
-                                                navHostController.navigate(AppScreens.FormularioSegundoScreen.route)
-                                            }
-                                             */
-
-                                        },
-                                        colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)) {
-
-                                        Icon(
-                                            imageVector = Icons.Filled.Send,
-                                            contentDescription = "Favorite Icon",
-                                            modifier = Modifier.align(Alignment.CenterVertically)
-                                        )
-                                        Text(
-                                            modifier = Modifier.padding(start = 10.dp),
-                                            text = "Continuar",
-                                            color = MaterialTheme.colorScheme.onPrimary,
-                                            style = TextStyle(fontSize = 18.sp)
-                                        )
-                                    }
-                                }
+                                ContinueButton(navHostController)
                             }
                         }
                     }
@@ -389,4 +317,69 @@ fun Formulario1(
         }
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomOutlinedTextField(
+    textEmail: MutableState<String>,
+    isErrorEmail: MutableState<Boolean>,
+    validateEmail: (String) -> Boolean
+) {
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = textEmail.value,
+        onValueChange = {
+            textEmail.value = it
+            println(textEmail.value)
+            isErrorEmail.value = !validateEmail(textEmail.value)
+            println(validateEmail(textEmail.value))
+        },
+        label = { Text(stringResource(R.string.correo_electronico)) },
+        placeholder = { Text(stringResource(R.string.correo_electronico)) },
+        singleLine = true,
+        isError = isErrorEmail.value,
+        supportingText = {
+            if (isErrorEmail.value) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.correo_invalido),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        trailingIcon = {
+            if (isErrorEmail.value)
+                Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+        },
+        //keyboardActions = KeyboardActions(onDone = { isError = !validateEmail(text) })
+    )
+}
+
+
+@Composable
+fun ContinueButton(navHostController: NavHostController) {
+    Row() {
+        ElevatedButton(
+            modifier = Modifier.weight(1f),
+            onClick = {
+                navHostController.navigate(AppScreens.Formulario2Screen.route)
+            },
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)) {
+
+            Icon(
+                imageVector = Icons.Filled.Send,
+                contentDescription = "Favorite Icon",
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = stringResource(R.string.continuar),
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = TextStyle(fontSize = 18.sp)
+            )
+        }
+    }
+}
+
 

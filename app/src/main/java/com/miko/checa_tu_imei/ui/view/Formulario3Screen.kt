@@ -27,6 +27,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
@@ -59,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -148,7 +151,7 @@ fun Formulario3(
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
-                                "Reporte IMEI",
+                                stringResource(R.string.reporte_imei),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -162,9 +165,9 @@ fun Formulario3(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* doSomething() */ }) {
+                            IconButton(onClick = { navHostController.navigate(AppScreens.PreguntasFrecuentesScreen.route) }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Favorite,
+                                    imageVector = Icons.Outlined.Info,
                                     contentDescription = "Localized description"
                                 )
                             }
@@ -194,7 +197,7 @@ fun Formulario3(
                                             end = 30.dp
                                         )
                                         .wrapContentSize(align = Alignment.Center),
-                                    text = "Datos complementarios",
+                                    text = stringResource(R.string.datos_complementarios),
                                     fontWeight = FontWeight.Bold,
                                     color = Color(android.graphics.Color.parseColor("#599BCC")),
                                     style = TextStyle(fontSize = 18.sp),
@@ -220,19 +223,24 @@ fun Formulario3(
                                         }
                                         isErrorCodigoBloqueo = codigoBloqueo.length < charLimitCodigoBloqueo
                                     },
-                                    label = { Text("Código de bloqueo *") },
-                                    placeholder = { Text("Código de bloqueo") },
+                                    label = { Text(stringResource(R.string.codigo_bloqueo)) },
+                                    placeholder = { Text(stringResource(R.string.codigo_bloqueo)) },
                                     supportingText = {
                                         val remainingCharactersCodigoBloqueo = charLimitCodigoBloqueo - codigoBloqueo.length
                                         if (!codigoBloqueo.isEmpty() && remainingCharactersCodigoBloqueo > 0) {
                                             Text(
                                                 modifier = Modifier.fillMaxWidth(),
-                                                text = "Faltan $remainingCharactersCodigoBloqueo caracteres",
+                                                text = stringResource(R.string.faltan) +" $remainingCharactersCodigoBloqueo "+ stringResource(R.string.caracteres),
                                                 textAlign = TextAlign.End,
                                             )
                                         }
                                     },
                                     isError = isErrorCodigoBloqueo,
+                                    trailingIcon = {
+                                        if (isErrorCodigoBloqueo)
+                                            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                                    },
+
                                     keyboardActions = KeyboardActions { validateCodigoBloqueo(codigoBloqueo) },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     modifier = Modifier
@@ -258,7 +266,7 @@ fun Formulario3(
                                         readOnly = true,
                                         value = selectedMotivoConsulta.value.description,
                                         onValueChange = {},
-                                        label = { Text("Motivo Consulta *") },
+                                        label = { Text(stringResource(R.string.motivo_consulta)) },
                                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMotivoConsulta) },
                                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                                     )
@@ -327,14 +335,14 @@ fun Formulario3(
                                         }
                                         isErrorNumCellContact = NumCellContact.length < charLimitNumCellContact || (!NumCellContact.isEmpty() && !NumCellContact.startsWith('9'))
                                     },
-                                    label = { Text("Número de teléfono contacto *") },
-                                    placeholder = { Text("Número de teléfono contacto") },
+                                    label = { Text(stringResource(R.string.numero_telefono_contacto)) },
+                                    placeholder = { Text(stringResource(R.string.numero_telefono_contacto)) },
                                     supportingText = {
                                         val remainingCharactersNumCellContact = charLimitNumCellContact - NumCellContact.length
                                         if (!NumCellContact.isEmpty() && remainingCharactersNumCellContact > 0) {
                                             Text(
                                                 modifier = Modifier.fillMaxWidth(),
-                                                text = "Faltan $remainingCharactersNumCellContact caracteres",
+                                                text = stringResource(R.string.faltan) +" $remainingCharactersNumCellContact "+ stringResource(R.string.caracteres),
                                                 textAlign = TextAlign.End,
                                             )
                                         }
@@ -342,6 +350,10 @@ fun Formulario3(
                                     isError = isErrorNumCellContact,
                                     keyboardActions = KeyboardActions { validateNumCellContact(NumCellContact) },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                    trailingIcon = {
+                                        if (isErrorNumCellContact)
+                                            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                                    },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .semantics {
@@ -385,7 +397,7 @@ fun Formulario3(
                                         )
                                         Text(
                                             modifier = Modifier.padding(start = 10.dp),
-                                            text = "Continuar",
+                                            text = stringResource(R.string.continuar),
                                             color = MaterialTheme.colorScheme.onPrimary,
                                             style = TextStyle(fontSize = 18.sp)
                                         )
@@ -393,7 +405,6 @@ fun Formulario3(
                                 }
                             }
                         }
-
                     }
                 }
             )

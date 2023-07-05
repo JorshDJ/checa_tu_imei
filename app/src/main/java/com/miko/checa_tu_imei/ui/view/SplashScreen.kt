@@ -1,11 +1,9 @@
 package com.miko.checa_tu_imei.ui.view
 
-import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,25 +14,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.miko.checa_tu_imei.R
+import com.miko.checa_tu_imei.ui.navigation.AppScreens
 import kotlinx.coroutines.delay
+
 
 @Composable
 fun SplashScreen(navHostController: NavHostController){
-    Splash()
+    Splash(navHostController)
     LaunchedEffect(key1 = true){
         delay(5000)
         navHostController.navigate("home_screen")
@@ -43,6 +39,7 @@ fun SplashScreen(navHostController: NavHostController){
 
 @Composable
 fun Splash (
+    navHostController: NavHostController
     //isDarkTheme: MutableState<Boolean>,
     //icon: @Composable() (() -> Unit)?
 ){
@@ -50,7 +47,7 @@ fun Splash (
         Column(modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.primary
             )
         ) {
             Column(
@@ -84,7 +81,7 @@ fun Splash (
                     ) {
 
                         Image(
-                            painter = painterResource(id = R.drawable.logo_osiptel),
+                            painter = painterResource(id = R.drawable.checacaso),
                             contentDescription = "Logo",
                             modifier = Modifier.size(200.dp)
                         )
@@ -96,12 +93,12 @@ fun Splash (
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.height(10.dp))
-                        /*
 
-                         //BUTTON
+                        //BUTTON
+
                         Button(
                             //onClick = { navHostController.navigate(route = AppScreens.ConsultaScreen.route) },
-                            onClick = { /*navHostController.navigate(route = AppScreens.ConsultaImeiView.route)*/ },
+                            onClick = { navHostController.navigate(route = AppScreens.HomeScreen.route) },
                             colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)) {
                             /*
                             Icon(
@@ -112,7 +109,6 @@ fun Splash (
                              */
                             Text(text = "Empezar", color = MaterialTheme.colorScheme.onPrimary)
                         }
-                         */
                     }
                 }
             }

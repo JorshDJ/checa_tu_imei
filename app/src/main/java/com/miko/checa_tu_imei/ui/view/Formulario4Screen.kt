@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -60,6 +62,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -141,9 +144,9 @@ fun Formulario4(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* doSomething() */ }) {
+                            IconButton(onClick = { navHostController.navigate(AppScreens.PreguntasFrecuentesScreen.route) }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Favorite,
+                                    imageVector = Icons.Outlined.Info,
                                     contentDescription = "Localized description"
                                 )
                             }
@@ -180,7 +183,7 @@ fun Formulario4(
                                             .background(color = MaterialTheme.colorScheme.primary)) {
                                             Text(
                                                 modifier = Modifier.padding(top = 10.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
-                                                text = "Finalizar Reporte: ",
+                                                text = stringResource(R.string.finalizar_reporte),
                                                 fontWeight = FontWeight.Bold,
                                                 color = MaterialTheme.colorScheme.onPrimary,
                                                 style = TextStyle(fontSize = 20.sp)
@@ -199,16 +202,14 @@ fun Formulario4(
 
                                 //OutLinedTextField
                                 OutlinedTextField(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth().height(150.dp),
                                     value = comentarios,
                                     onValueChange = { comentarios = it },
-                                    label = { Text("Comentarios *") } ,
-                                    placeholder = { Text("Comentarios * ") },
+                                    label = { Text(stringResource(R.string.comentarios)) } ,
+                                    placeholder = { Text(stringResource(R.string.comentarios)) },
                                     maxLines = 5,
                                 )
-                                TextField(
-                                    value = comentarios,
-                                    onValueChange ={ comentarios = it } )
+
                                 Spacer(modifier = Modifier.height(24.dp))
 
                                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -221,7 +222,7 @@ fun Formulario4(
                                             Column() {
                                                 Text(
                                                     modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
-                                                    text = "Adjuntar Archivo (PDF o imagenes)",
+                                                    text = stringResource(R.string.adjuntar_archivo),
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     textAlign = TextAlign.Justify
                                                 )
@@ -241,7 +242,7 @@ fun Formulario4(
                                                         )
                                                         Text(
                                                             modifier = Modifier.padding(start = 10.dp),
-                                                            text = "Buscar archivo",
+                                                            text = stringResource(R.string.buscar_archivo),
                                                             color = MaterialTheme.colorScheme.onPrimary,
                                                             style = TextStyle(fontSize = 18.sp)
                                                         )
@@ -250,7 +251,7 @@ fun Formulario4(
                                                 }
                                                 Column() {
                                                     result.value?.let { uri ->
-                                                        Text("Archivo seleccionado: $uri")
+                                                        Text(stringResource(R.string.archivo_seleccionado)+" $uri")
                                                     }
                                                     IconButton(onClick = { result.value=null }) {
                                                         Icon(Icons.Outlined.Lock, contentDescription = "Localized description")
@@ -285,7 +286,7 @@ fun Formulario4(
 
                                         Text(
                                             modifier = Modifier.padding(start = 10.dp),
-                                            text = "Finalizar",
+                                            text = stringResource(R.string.finalizar),
                                             color = MaterialTheme.colorScheme.onPrimary,
                                             style = TextStyle(fontSize = 18.sp)
                                         )
@@ -293,7 +294,6 @@ fun Formulario4(
                                 }
                             }
                         }
-
                     }
                 }
             )

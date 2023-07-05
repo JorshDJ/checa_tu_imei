@@ -3,7 +3,6 @@ package com.miko.checa_tu_imei.ui.view
 //import android.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,15 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -39,15 +35,9 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -55,15 +45,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -76,7 +64,6 @@ import androidx.navigation.NavHostController
 import com.miko.checa_tu_imei.R
 import com.miko.checa_tu_imei.ui.navigation.AppScreens
 import com.miko.checa_tu_imei.ui.viewmodel.ImeiViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun Formulario2Screen(
@@ -96,13 +83,11 @@ fun Formulario2Screen(
 fun Formulario2(
     //Parámetro NavHostController
     navHostController: NavHostController,
-
     viewModel: ImeiViewModel,
     //Parametro Switch
     isDarkTheme: MutableState<Boolean>,
     icon: @Composable() (() -> Unit)?,
 ){
-
     //variable para el scroll
     val scrollState = rememberScrollState()
 
@@ -152,8 +137,6 @@ fun Formulario2(
     var selectedConcesionarioMovil = remember { mutableStateOf(itemsConcesionarioMovil.firstOrNull() ?: OpcionesConcesionarioMovil("", "")) }
 
 
-
-
     //VALIDACIÓN PARA NUMERO DE CELULAR
     var NumCell by rememberSaveable { mutableStateOf("") }
     var isErrorNumCell by rememberSaveable { mutableStateOf(false) }
@@ -188,9 +171,9 @@ fun Formulario2(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* doSomething() */ }) {
+                            IconButton(onClick = { navHostController.navigate(AppScreens.PreguntasFrecuentesScreen.route) }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Favorite,
+                                    imageVector = Icons.Outlined.Info,
                                     contentDescription = "Localized description"
                                 )
                             }
@@ -222,7 +205,7 @@ fun Formulario2(
                                             end = 30.dp
                                         )
                                         .wrapContentSize(align = Alignment.Center),
-                                    text = "Ingresa los datos del equipo a reportar",
+                                    text = stringResource(R.string.datos_equipo_reportar),
                                     fontWeight = FontWeight.Bold,
                                     color = Color(android.graphics.Color.parseColor("#599BCC")),
                                     style = TextStyle(fontSize = 18.sp),
@@ -237,7 +220,6 @@ fun Formulario2(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Spacer(modifier = Modifier.height(30.dp))
-
 
                                 Image(
                                     painter = painterResource(id = R.drawable.smartphone),
@@ -262,12 +244,16 @@ fun Formulario2(
                                         if (!imei.isEmpty() && remainingCharactersImei > 0) {
                                             Text(
                                                 modifier = Modifier.fillMaxWidth(),
-                                                text = "Faltan $remainingCharactersImei caracteres",
+                                                text = stringResource(R.string.faltan) +" $remainingCharactersImei "+ stringResource(R.string.caracteres),
                                                 textAlign = TextAlign.End,
                                             )
                                         }
                                     },
                                     isError = isError,
+                                    trailingIcon = {
+                                        if (isError)
+                                            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                                    },
                                     keyboardActions = KeyboardActions { validateImei(imei) },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     modifier = Modifier
@@ -292,7 +278,7 @@ fun Formulario2(
                                         readOnly = true,
                                         value = selectedOptionMarcaMovil.value.name,
                                         onValueChange = {},
-                                        label = { Text("Marca móvil *") },
+                                        label = { Text(stringResource(R.string.marca_movil)) },
                                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMarcaMovil) },
                                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                                     )
@@ -328,7 +314,7 @@ fun Formulario2(
                                         readOnly = true,
                                         value = selectedOptionModelMovil.value.name,
                                         onValueChange = {},
-                                        label = { Text("Modelo móvil *") },
+                                        label = { Text(stringResource(R.string.modelo_movil)) },
                                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedModelMovil) },
                                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                                     )
@@ -364,7 +350,7 @@ fun Formulario2(
                                         readOnly = true,
                                         value = selectedConcesionarioMovil.value.name,
                                         onValueChange = {},
-                                        label = { Text("Concesionario movil *") },
+                                        label = { Text(stringResource(R.string.concesionario_movil)) },
                                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedConcesionarioMovil) },
                                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                                     )
@@ -397,19 +383,23 @@ fun Formulario2(
                                         }
                                         isErrorNumCell = NumCell.length < charLimitNumCell || (!NumCell.isEmpty() && !NumCell.startsWith('9'))
                                     },
-                                    label = { Text("Número de Móvil utilizado en el equipo *") },
-                                    placeholder = { Text("Número de Móvil utilizado en el equipo") },
+                                    label = { Text(stringResource(R.string.numero_movil)) },
+                                    placeholder = { Text(stringResource(R.string.numero_movil)) },
                                     supportingText = {
                                         val remainingCharactersNumCell = charLimitNumCell - NumCell.length
                                         if (!NumCell.isEmpty() && remainingCharactersNumCell > 0) {
                                             Text(
                                                 modifier = Modifier.fillMaxWidth(),
-                                                text = "Faltan $remainingCharactersNumCell caracteres",
+                                                text = stringResource(R.string.faltan) +" $remainingCharactersNumCell "+ stringResource(R.string.caracteres),
                                                 textAlign = TextAlign.End,
                                             )
                                         }
                                     },
                                     isError = isErrorNumCell,
+                                    trailingIcon = {
+                                        if (isErrorNumCell)
+                                            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                                    },
                                     keyboardActions = KeyboardActions { validateNumCell(NumCell) },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                     modifier = Modifier
@@ -419,7 +409,6 @@ fun Formulario2(
                                         },
                                 )
                                 ///
-
                                 Spacer(modifier = Modifier.height(30.dp))
                                 Row() {
                                     ElevatedButton(
@@ -427,22 +416,6 @@ fun Formulario2(
 
                                         onClick = {
                                             navHostController.navigate( AppScreens.Formulario3Screen.route)
-                                            /*
-                                            if (imei.isBlank() ||
-                                                apellidos.value.isBlank() ||
-                                                tipoDocumento.value.isBlank() ||
-                                                numeroDocumento.value.isBlank() ||
-                                                correo.value.isBlank()
-                                                // Mostrar un mensaje al usuario indicando que todos los campos son obligatorios
-                                            ) {
-
-                                            } else {
-
-                                                // Procesar los datos del formulario
-                                            }
-                                                  /*TODO*/
-
-                                             */
 
                                         },
                                         colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)) {
@@ -454,7 +427,7 @@ fun Formulario2(
                                         )
                                         Text(
                                             modifier = Modifier.padding(start = 10.dp),
-                                            text = "Continuar",
+                                            text = stringResource(R.string.continuar),
                                             color = MaterialTheme.colorScheme.onPrimary,
                                             style = TextStyle(fontSize = 18.sp)
                                         )
@@ -468,3 +441,8 @@ fun Formulario2(
         }
     }
 }
+
+
+
+
+

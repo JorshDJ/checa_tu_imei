@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -66,6 +67,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -78,6 +80,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.miko.checa_tu_imei.R
 import com.miko.checa_tu_imei.ui.navigation.AppScreens
+import com.miko.checa_tu_imei.ui.view.components.CustomDrawerContent
 import com.miko.checa_tu_imei.ui.viewmodel.ImeiViewModel
 import kotlinx.coroutines.launch
 
@@ -112,19 +115,12 @@ fun FormularioPrincipal(
     //Variables para el drawer
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    data class IconItem(val icon: ImageVector, val description: String)
-    val itemsOpciones = listOf(
-        IconItem(Icons.Default.Home, "Home"),
-        IconItem(Icons.Default.Info, "Preguntas frecuentes"),
-        IconItem(Icons.Default.Search, "Empresas Renteseg"),
-        IconItem(Icons.Default.List, "Formulario")
-    )
-    val selectedItem = remember { mutableStateOf(itemsOpciones[3]) }
+    val selectedItemDrawer =3
 
 
 
     //variable para el dropdown TipoDocumento
-    var expandedTipoDocumento by remember { mutableStateOf(false) }
+    //var expandedTipoDocumento by remember { mutableStateOf(false) }
     data class OpcionesTipoDocumento(var id: String, var nombreDoc: String, val charLimit:Int)
     val itemsTipoDocumento = listOf(
         OpcionesTipoDocumento("1", "DNI",8),
@@ -135,8 +131,9 @@ fun FormularioPrincipal(
     )
     var selectedOptionTipoDocumento = remember { mutableStateOf(itemsTipoDocumento[0]) }
 
+
+
     //para validacion de Número de documento
-    //var tipoDoc by rememberSaveable { mutableStateOf("") }
     var isErrorTipoDoc by rememberSaveable { mutableStateOf(false) }
     //val charLimitTipoDoc = 16
     fun validateTipoDoc(text2: String) {
@@ -153,54 +150,13 @@ fun FormularioPrincipal(
             ModalNavigationDrawer(
                 drawerState = drawerState,
                 drawerContent = {
-                    ModalDrawerSheet {
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        //OPCIONES DEL DRAWER
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(start = 30.dp, top = 10.dp),
-                                text = "Modo Oscuro"
-                            )
-                            Switch(
-                                modifier = Modifier.semantics { contentDescription = "Demo with icon" }.padding(end = 30.dp),
-                                checked = isDarkTheme.value,
-                                onCheckedChange = { isDarkTheme.value = it },
-                                thumbContent = icon
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(start = 20.dp, end = 20.dp))
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        itemsOpciones.forEach { item ->
-                            NavigationDrawerItem(
-                                //icon = { Icon(item, contentDescription = null) },
-                                icon={ Icon(imageVector = item.icon, contentDescription = null) },
-                                label = { Text(item.description) },
-                                //selected = item == selectedItem.value,
-                                selected = item == selectedItem.value,
-                                onClick = {
-                                    scope.launch { drawerState.close() }
-                                    selectedItem.value = item
-                                    //Navegación en el drawer
-                                    if (selectedItem.value==itemsOpciones[0]){
-                                        navHostController.navigate(route = AppScreens.HomeScreen.route)
-                                    }
-                                    if (selectedItem.value==itemsOpciones[2]){
-                                        navHostController.navigate(route = AppScreens.EmpresasRentesegScreen.route)
-                                    }
-
-                                    if (selectedItem.value==itemsOpciones[3]){
-                                        navHostController.navigate(route = AppScreens.FormularioPrincipalScreen.route)
-                                    }
-                                },
-                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                            )
-                        }//FIN OPCIONES DEL DRAWER
-                    }
+                    CustomDrawerContent(
+                        isDarkTheme = isDarkTheme,
+                        selectedItem = selectedItemDrawer,
+                        drawerState = drawerState,
+                        navHostController = navHostController,
+                        icon = icon,
+                        )
                 },
                 content = {
                     Scaffold(
@@ -208,7 +164,7 @@ fun FormularioPrincipal(
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(
-                                        "Reporte IMEI",
+                                        stringResource(R.string.reporte_imei),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -222,9 +178,9 @@ fun FormularioPrincipal(
                                     }
                                 },
                                 actions = {
-                                    IconButton(onClick = { /* doSomething() */ }) {
+                                    IconButton(onClick = { navHostController.navigate(AppScreens.PreguntasFrecuentesScreen.route) }) {
                                         Icon(
-                                            imageVector = Icons.Filled.Favorite,
+                                            imageVector = Icons.Outlined.Info,
                                             contentDescription = "Localized description"
                                         )
                                     }
@@ -237,6 +193,7 @@ fun FormularioPrincipal(
 
                                 ) {
                                 ElevatedCard(modifier=Modifier.fillMaxWidth()) {
+
                                     Spacer(modifier = Modifier.height(5.dp))
 
                                     Column(
@@ -246,31 +203,9 @@ fun FormularioPrincipal(
                                             .verticalScroll(scrollState),
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
+                                        FrequentQuestionsRow()
 
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.Center
-
-                                        ) {
-                                            Card(
-                                                modifier = Modifier.fillMaxWidth(),
-                                            ) {
-                                                Box(modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .background(color = MaterialTheme.colorScheme.primary)) {
-                                                    Text(
-                                                        modifier = Modifier.padding(top = 10.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
-                                                        text = "Preguntas frecuentes : ",
-
-                                                        fontWeight = FontWeight.Bold,
-                                                        color = MaterialTheme.colorScheme.onPrimary,
-                                                        style = TextStyle(fontSize = 20.sp)
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.height(20.dp))
-                                        Spacer(modifier = Modifier.height(30.dp))
+                                        Spacer(modifier = Modifier.height(50.dp))
 
                                         Image(
                                             painter = painterResource(id = R.drawable.smartphone),
@@ -279,79 +214,11 @@ fun FormularioPrincipal(
                                         )
                                         Spacer(modifier = Modifier.height(24.dp))
 
-                                        Row(modifier = Modifier.fillMaxWidth()) {
-                                            OutlinedCard(
-                                                modifier = Modifier.fillMaxWidth(),
-                                            ) {
-                                                Box(modifier = Modifier
-                                                    .fillMaxWidth()
+                                        InformativeCard(navHostController)
 
-                                                ) {
-                                                    Column() {
-
-                                                        Text(
-                                                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
-
-                                                            text = "Si el IMEI de su teléfono no figura en esta base de datos a pesar de haberlo reportado por " +
-                                                                    "sustracción o perdida ante tu empresa operadora, o presentas algún incoveniente con el desbloqueo de tu"+
-                                                                    "teléfono luego de la recuperación del mismo escríbenos a reportaimei@osiptel.gob.pe o completa el formulario "+
-                                                                    "que encontrarás en el siguiente enlace."
-                                                            ,
-                                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                            textAlign = TextAlign.Justify
-                                                        )
-                                                        //Spacer(modifier = Modifier.height(20.dp))
-
-                                                        Row() {
-                                                            ElevatedButton(
-                                                                modifier = Modifier
-                                                                    .weight(1f)
-                                                                    .padding(16.dp),
-                                                                onClick = { navHostController.navigate(
-                                                                    AppScreens.Formulario1Screen.route)},
-                                                                colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)
-                                                            ) {
-
-                                                                Icon(
-                                                                    imageVector = Icons.Filled.Info,
-                                                                    contentDescription = "Icono Info",
-                                                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                                                )
-
-                                                                Text(
-                                                                    modifier = Modifier.padding(start = 10.dp),
-                                                                    text = "Formulario",
-                                                                    color = MaterialTheme.colorScheme.onPrimary,
-                                                                    style = TextStyle(fontSize = 18.sp)
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
                                         Spacer(modifier = Modifier.height(30.dp))
-                                        Row() {
-                                            ElevatedButton(
-                                                modifier = Modifier.weight(1f),
-                                                onClick = { navHostController.popBackStack() },
-                                                colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)
-                                            ) {
 
-                                                Icon(
-                                                    imageVector = Icons.Filled.ArrowBack,
-                                                    contentDescription = "Favorite Icon",
-                                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                                )
-
-                                                Text(
-                                                    modifier = Modifier.padding(start = 10.dp),
-                                                    text = "Regresar",
-                                                    color = MaterialTheme.colorScheme.onPrimary,
-                                                    style = TextStyle(fontSize = 18.sp)
-                                                )
-                                            }
-                                        }
+                                        BackButton(navHostController)
                                     }
                                 }
                             }
@@ -362,3 +229,101 @@ fun FormularioPrincipal(
         }
     }
 }
+@Composable
+fun FrequentQuestionsRow() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.primary)
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 10.dp, bottom = 15.dp, start = 16.dp, end = 16.dp),
+                    text = stringResource(R.string.preguntas_frecuentes),
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = TextStyle(fontSize = 20.sp)
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun InformativeCard(navHostController: NavHostController) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        OutlinedCard(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
+                        text = stringResource(R.string.mensaje_email),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Justify
+                    )
+                    Row() {
+                        ElevatedButton(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(16.dp),
+                            onClick = { navHostController.navigate(AppScreens.Formulario1Screen.route) },
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Info,
+                                contentDescription = "Icono Info",
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
+
+                            Text(
+                                modifier = Modifier.padding(start = 10.dp),
+                                text = stringResource(R.string.formulario),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                style = TextStyle(fontSize = 18.sp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun BackButton(navHostController: NavHostController) {
+    Row() {
+        ElevatedButton(
+            modifier = Modifier.weight(1f),
+            onClick = { navHostController.popBackStack() },
+            colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "Back Icon",
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = stringResource(R.string.regresar),
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = TextStyle(fontSize = 18.sp)
+            )
+        }
+    }
+}
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">checa_tu_imei</string>
+    <string name="app_language">qu</string>
+
+    <string name="show_less">Show less</string>
+    <string name="show_more">Show more</string>
+    <!-- DRAWER -->
+    <string name="drawer_inicio">Qallariy</string>
+    <string name="drawer_empresas_renteseg">Renteseg Kampaniyakuna</string>
+    <string name="drawer_preguntas_frecuentes">Askakuna yaykunapi</string>
+    <string name="drawer_formulario">Formulario</string>
+
+    <!-- Home Screen  -->
+    <string name="consultar_imei">T\'aqay IMEI</string>
+    <string name="faltan">Mana kasqa</string>
+    <string name="caracteres">Leterakuna</string>
+    <string name="verificar">Llanchiy</string>
+    <string name="aplicativo_permitir_consulta">Kay llank\'anaqa IMEI kodigo t\'aqayta atin internetpi</string>
+    <string name="no_soy_robot">Mana robotmi kani</string>
+
+    <!-- Formulario 1 screen -->
+    <string name="reporte_imei">IMEI Ripurtay</string>
+    <string name="ingresar_datos_personales">Yaykuna tusuyta willanki kay consulta formularioman</string>
+    <string name="nombre">Suti *</string>
+    <string name="apellidos">Familiya suti *</string>
+    <string name="tipo_documento">Qelqa tukuyqa *</string>
+    <string name="numero_documento">Qelqa tukuyqa sumaq *</string>
+    <string name="entrada_invalida">Mana allin yachanayuq</string>
+    <string name="error">Pantasqa</string>
+    <string name="correo_electronico">Correo electronico *</string>
+    <string name="correo_invalido">Mana allin chaskisqa correo</string>
+    <string name="continuar">Qatiy</string>
+
+    <!-- Formulario 2 screen -->
+    <string name="datos_equipo_reportar">Yupay ripurtayta atinaq rurana willankuna</string>
+    <string name="marca_movil">Mobil marka *</string>
+    <string name="modelo_movil">Mobil modelo *</string>
+    <string name="concesionario_movil">Mobil concesionario *</string>
+    <string name="numero_movil">Ruranaqa telefonoman llamk\'achiq yanapaq *</string>
+
+    <!-- Formulario 3 Screen -->
+    <string name="datos_complementarios">Yapana willankuna</string>
+    <string name="codigo_bloqueo">Wichqana Kodigo *</string>
+    <string name="motivo_consulta">Imarayku consulta *</string>
+    <string name="numero_telefono_contacto">Wayna telefono yanapaq *</string>
+
+    <!-- Formulario 4 Screen -->
+    <string name="finalizar_reporte">Tukuy Ripurtay: </string>
+    <string name="comentarios">Yupaykuna *</string>
+    <string name="adjuntar_archivo">T\'ijrapay Pank\'a (PDF or imahenakuna)</string>
+    <string name="buscar_archivo">Maskay Pank\'a</string>
+    <string name="archivo_seleccionado">Ajllasqa Pank\'a</string>
+    <string name="finalizar">Tukuy</string>
+
+    <!-- Formulario Principal Screen -->
+    <string name="modo_oscuro">Ñawi q\'ara</string>
+    <string name="preguntas_frecuentes">Askakuna yaykunapi:</string>
+    <string name="mensaje_email">Spa IMEI telefono mana tarin kay datapi hukllasqa kaykachapi orqo orqoykichis telefonoman chinkachinapaq orqo servicio provaydoriman, orqo mana atinchu llank\'achin telefonoman kikinchikpaqmi huk tarisqaykichistaqa, kawsanaykiman reportaimei@osiptel.gob.pe orqo yanapanki formulario orqo tukuy qatiq.</string>
+    <string name="formulario">Formulario</string>
+    <string name="regresar">Kutiy</string>
+
+    <!-- Respuesta Consulta Screen -->
+    <string name="respuesta">Uchuy yanapa</string>
+    <string name="respuesta_consulta">T\'aqayniyki uchuy yanapaqa:</string>
+    <string name="imei_no_encontrado">IMEI mana tarin ripurtasqawanmi.</string>
+    <string name="numero">Numero:</string>
+    <string name="imei_lista_negra">IMEI qaranqa lista.</string>
+    <string name="estado_equipo">Rurana kasqa</string>
+    <string name="operador">Servicio Provaydor</string>
+    <string name="fecha">Punchaw</string>
+    <string name="ir_inicio">Riy qallariyman</string>
+    <string name="enviar_a">Kachay</string>
+    <string name="compartir">Compartir</string>
+    <string name="imagen_guardada">Imahen waqaychasqa</string>
+
+    <!-- Time and date time picker -->
+    <string name="fecha_reporte">Ripurtay punchaw</string>
+    <string name="hora_reporte">Ripurtay pacha</string>
+
+
+</resources>

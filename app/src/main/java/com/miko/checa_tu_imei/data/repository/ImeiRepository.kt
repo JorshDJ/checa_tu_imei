@@ -5,11 +5,13 @@ import com.miko.checa_tu_imei.domain.model.EmpresaItem
 import com.miko.checa_tu_imei.domain.model.ImeiItem
 import com.miko.checa_tu_imei.domain.model.MarcaItem
 import com.miko.checa_tu_imei.domain.model.ModeloItem
+import com.miko.checa_tu_imei.domain.model.PreguntaFrecuenteItem
 import com.miko.checa_tu_imei.domain.model.ProblemaDetectadoItem
 import com.miko.checa_tu_imei.domain.model.toEmpresaItem
 import com.miko.checa_tu_imei.domain.model.toImeiItem
 import com.miko.checa_tu_imei.domain.model.toMarcaItem
 import com.miko.checa_tu_imei.domain.model.toModeloItem
+import com.miko.checa_tu_imei.domain.model.toPreguntaFrecuenteItem
 import com.miko.checa_tu_imei.domain.model.toProblemaDetectadoItem
 import javax.inject.Inject
 
@@ -45,5 +47,9 @@ class ImeiRepository @Inject constructor(private val imeiService: ImeiService) {
         return response.map { it.toProblemaDetectadoItem() } ?: emptyList()
     }
 
+    suspend fun getPreguntasFrecuentes() : List<PreguntaFrecuenteItem>{
+        val response = imeiService.getPreguntasFrecuentes()
+        return response.map { it.toPreguntaFrecuenteItem() } ?: emptyList()
+    }
 
 }

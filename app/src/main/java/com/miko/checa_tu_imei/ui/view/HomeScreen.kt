@@ -2,7 +2,6 @@ package com.miko.checa_tu_imei.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,18 +16,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -36,26 +30,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemColors
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.NavigationDrawerItemDefaults.colors
 
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
-import androidx.compose.material3.SwitchDefaults
 
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,10 +51,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 
 import androidx.compose.ui.semantics.semantics
@@ -76,19 +63,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.recreate
 import androidx.navigation.NavHostController
 import com.miko.checa_tu_imei.R
 import com.miko.checa_tu_imei.ui.navigation.AppScreens
 import com.miko.checa_tu_imei.ui.theme.topAppBar2
+import com.miko.checa_tu_imei.ui.view.components.CustomDrawerContent
+
 import com.miko.checa_tu_imei.ui.viewmodel.ImeiViewModel
+import com.miko.checa_tu_imei.util.Util
+import com.miko.checa_tu_imei.util.Util.setLocale
+
 import kotlinx.coroutines.launch
-
-
-
 
 @Composable
 fun HomeSreen(
@@ -113,6 +102,14 @@ fun Home(
     isDarkTheme: MutableState<Boolean>,
     icon: @Composable() (() -> Unit)?,
 ){
+    //var context = LocalContext.current
+    //val isEnglish = remember { mutableStateOf(false) }
+    var context = LocalContext.current
+    var isEnglish by remember { mutableStateOf(false) }
+
+    val txt_inicio by remember { mutableStateOf(R.string.drawer_inicio) }
+
+    ///
 
     //Variables y fx para el formulario Consulta IMEI
     var imei by remember { mutableStateOf("") }
@@ -126,17 +123,7 @@ fun Home(
     //Variables para el drawer
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    data class IconItem(val icon: ImageVector, val description: String)
-    val itemsOpciones = listOf(
-        IconItem(Icons.Default.Home, "Home"),
-        IconItem(Icons.Default.Info, "Preguntas frecuentes"),
-        IconItem(Icons.Default.Search, "Empresas Renteseg"),
-        IconItem(Icons.Default.List, "Formulario")
-    )
-    val selectedItem = remember { mutableStateOf(itemsOpciones[0]) }
-
-
-
+    val selectedItemDrawer =0
 
     MaterialTheme() {
         Column(modifier = Modifier
@@ -145,129 +132,40 @@ fun Home(
                 color = MaterialTheme.colorScheme.secondary
             )
         ) {
+
             ModalNavigationDrawer(
                 //scrimColor = MaterialTheme.colorScheme.primaryContainer,
                 drawerState = drawerState,
                 drawerContent = {
-                    ModalDrawerSheet (
-                        //modifier= Modifier.padding(5.dp),
-                        //drawerContainerColor = MaterialTheme.colorScheme.primary,
-                        //drawerContentColor = MaterialTheme.colorScheme.primaryContainer,
-
-                            ){
-                        Spacer(modifier = Modifier.height(20.dp))
-
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(start = 30.dp, top = 10.dp),
-                                text = "Modo Oscuro",
-                                color = MaterialTheme.colorScheme.tertiaryContainer
-                            )
-                            Switch(
-                                modifier = Modifier
-                                    .semantics { contentDescription = "Demo with icon" }
-                                    .padding(end = 30.dp),
-                                checked = isDarkTheme.value,
-                                onCheckedChange = { isDarkTheme.value = it },
-                                thumbContent = icon,
-                                colors = SwitchDefaults.colors(
-                                    uncheckedIconColor= MaterialTheme.colorScheme.tertiary,
-                                    //uncheckedTrackColor=MaterialTheme.colorScheme.tertiary,
-                                    uncheckedThumbColor = topAppBar2,
-
-                                    uncheckedBorderColor = MaterialTheme.colorScheme.primary
-                                )
-                            )
-                        }
-                        Divider(modifier = Modifier.padding(start = 20.dp, end = 20.dp))
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        itemsOpciones.forEach { item ->
-                            NavigationDrawerItem(
-                                colors= colors(
-                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
-                                    selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                                    selectedIconColor = MaterialTheme.colorScheme.onPrimary
-                                ),
-                                //icon = { Icon(item, contentDescription = null) },
-                                icon={ Icon(imageVector = item.icon, contentDescription = null) },
-                                label = { Text(item.description) },
-                                //selected = item == selectedItem.value,
-                                selected = item == selectedItem.value,
-                                onClick = {
-                                    scope.launch { drawerState.close() }
-                                    selectedItem.value = item
-                                    //Navegación en el drawer
-                                    if (selectedItem.value==itemsOpciones[0]){
-                                        navHostController.navigate(route = AppScreens.HomeScreen.route)
-                                    }
-                                    if (selectedItem.value==itemsOpciones[2]){
-                                        navHostController.navigate(route = AppScreens.EmpresasRentesegScreen.route)
-                                    }
-
-                                    if (selectedItem.value==itemsOpciones[3]){
-                                        navHostController.navigate(route = AppScreens.FormularioPrincipalScreen.route)
-                                    }
-                                },
-                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                            )
-                        }
-                    }
+                    CustomDrawerContent(
+                        isDarkTheme = isDarkTheme,
+                        selectedItem = selectedItemDrawer,
+                        drawerState = drawerState,
+                        navHostController = navHostController,
+                        icon = icon,
+                    )
                 },
                 content = {
+
                     Scaffold(
-                        contentColor = MaterialTheme.colorScheme.primaryContainer,//parece que no hace nada
                         topBar = {
                             CenterAlignedTopAppBar(
                                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                 ),
-
-                                title = {
-                                    Text(
-                                        text="Consulta IMEI",
-                                        maxLines = 1,
-                                        color = MaterialTheme.colorScheme.onPrimary,
-                                        fontWeight = FontWeight.Bold,
-                                        //overflow = TextOverflow.Ellipsis
-                                    )
-                                },
-                                navigationIcon = {
-                                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Menu,
-                                            contentDescription = "Localized description",
-                                            tint = MaterialTheme.colorScheme.onPrimary,
-                                        )
-                                    }
-                                },
-                                actions = {
-
-                                    IconButton(onClick = { /* doSomething() */ }) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Info,
-                                            contentDescription = "Localized description",
-                                            tint = MaterialTheme.colorScheme.onPrimary,
-                                        )
-                                    }
-                                }
+                                title = { AppBarTitle(stringResource(R.string.consultar_imei)) },
+                                navigationIcon = { AppBarNavigationIcon { scope.launch { drawerState.open() } } },
+                                actions = { AppBarAction(navHostController) }
                             )
                         },
                         content = { innerPadding ->
-                            Column(
-                                modifier = Modifier.padding(innerPadding),
+                            Column(modifier = Modifier.padding(innerPadding)) {
 
-                                ) {
                                 ElevatedCard(modifier= Modifier.fillMaxWidth()) {
                                     Column(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(16.dp),
-
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Spacer(modifier = Modifier.height(30.dp))
@@ -277,110 +175,30 @@ fun Home(
                                             contentDescription = "Logo",
                                             modifier = Modifier.size(200.dp)
                                         )
-                                        Spacer(modifier = Modifier.height(24.dp))
-                                        Row(modifier = Modifier.fillMaxWidth()) {
-                                            Card(
-                                                modifier = Modifier.fillMaxWidth(),
-                                            ) {
-                                                Box(modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .background(color = MaterialTheme.colorScheme.primary)) {
-                                                    Text(
-                                                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
-                                                        text = "Este aplicativo permite consultar en línea el código IMEI ",
-                                                        color = MaterialTheme.colorScheme.onPrimary
-                                                    )
-                                                }
-                                            }
-                                        }
+
                                         Spacer(modifier = Modifier.height(24.dp))
 
-                                        OutlinedTextField(
-                                            value = imei,
-                                            onValueChange = { input ->
-                                                if (input.all { it.isDigit() } && input.length <= charLimitImei) {
-                                                    imei = input
-                                                }
-                                                isErrorImei = imei.length < charLimitImei
-                                            },
-                                            label = { Text("Consultar IMEI") },
-                                            placeholder = { Text("Consultar IMEI") },
-                                            supportingText = {
-                                                val remainingCharactersImei = charLimitImei - imei.length
-                                                if (!imei.isEmpty() && remainingCharactersImei > 0) {
-                                                    Text(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        text = "Faltan $remainingCharactersImei caracteres",
-                                                        textAlign = TextAlign.End,
-                                                    )
-                                                }
-                                            },
-                                            isError = isErrorImei,
-                                            keyboardActions = KeyboardActions { validateImei(imei) },
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .semantics {
-                                                    //if (isErrorImei) error(errorMessageImei)
-                                                },
-                                        )
+                                        CardRow(stringResource(R.string.aplicativo_permitir_consulta))
+
                                         Spacer(modifier = Modifier.height(24.dp))
 
-                                        Row(modifier = Modifier.fillMaxWidth()) {
-                                            OutlinedCard(
-                                                modifier = Modifier.fillMaxWidth(),
-                                            ) {
-                                                Box(modifier = Modifier
-                                                    .fillMaxWidth()
-
-                                                ) {
-                                                    Row(modifier = Modifier.padding(10.dp)) {1
-                                                        val checkedState = remember { mutableStateOf(true) }
-
-                                                        Checkbox(
-                                                            checked = checkedState.value,
-                                                            onCheckedChange = { checkedState.value = it }
-                                                        )
-                                                        Text(
-                                                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
-                                                            text = "No soy un robot ",
-                                                            //color = Color.White
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.height(30.dp))
-                                        Row() {
-                                            ElevatedButton(
-                                                modifier = Modifier.weight(1f),
-                                                onClick = {
-                                                    //var numDeConsulta : String = imei
-                                                    navHostController.navigate(route = AppScreens.RespuestaConsultaScreen.route +imei)
-                                                },
-                                                colors = ButtonDefaults.buttonColors( MaterialTheme.colorScheme.primary)) {
-                                                /*
-                                                Icon(
-                                                    imageVector = Icons.Filled.Send,
-                                                    contentDescription = "Favorite Icon",
-                                                    modifier = Modifier.align(Alignment.CenterVertically)
-                                                )
-                                                 */
-                                                Text(
-                                                    text = "Verificar",
-                                                    color = MaterialTheme.colorScheme.onPrimary,
-                                                    style = TextStyle(fontSize = 18.sp)
-                                                )
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.height(30.dp))
-                                        /*
-                                        Divider(
-                                            color= MaterialTheme.colorScheme.tertiary,
-                                            //thickness = 5.dp
+                                        ImeiTextField(
+                                            imei = imei,
+                                            onImeiChange = { imei = it },
+                                            isErrorImei = isErrorImei,
+                                            onImeiErrorChange = { isErrorImei = it },
+                                            charLimitImei = charLimitImei
                                         )
 
-                                         */
+                                        Spacer(modifier = Modifier.height(24.dp))
+
+                                        CheckboxRow(stringResource(R.string.no_soy_robot))
+
+                                        Spacer(modifier = Modifier.height(30.dp))
+
+                                        ButtonRow(stringResource(R.string.verificar), { navHostController.navigate(route = AppScreens.RespuestaConsultaScreen.route +imei)})
+
+                                        Spacer(modifier = Modifier.height(30.dp))
                                     }
                                 }
                             }
@@ -391,8 +209,6 @@ fun Home(
         }
     }
 }
-
-
 
 @Composable
 fun ImageAsIcon(
@@ -407,6 +223,153 @@ fun ImageAsIcon(
         painter = image,
         contentDescription = contentDescription,
         modifier = modifier.size(size)
-
     )
 }
+
+
+// Extracted AppBarTitle
+@Composable
+fun AppBarTitle(text: String) {
+    Text(
+        text = text,
+        maxLines = 1,
+        color = MaterialTheme.colorScheme.onPrimary,
+        fontWeight = FontWeight.Bold
+    )
+}
+
+// Extracted AppBarNavigationIcon
+@Composable
+fun AppBarNavigationIcon(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Filled.Menu,
+            contentDescription = "Localized description",
+            tint = MaterialTheme.colorScheme.onPrimary,
+        )
+    }
+}
+@Composable
+fun AppBarAction(navHostController: NavHostController) {
+    IconButton(onClick = { navHostController.navigate(AppScreens.PreguntasFrecuentesScreen.route) }) {
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            contentDescription = "Localized description",
+            tint = MaterialTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+@Composable
+fun CardRow(text: String) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.primary)) {
+                Text(
+                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
+                    text = text,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ImeiTextField(
+    imei: String,
+    onImeiChange: (String) -> Unit,
+    isErrorImei: Boolean,
+    onImeiErrorChange: (Boolean) -> Unit,
+    charLimitImei: Int
+) {
+    //val charLimitImei = 15
+
+    OutlinedTextField(
+        value = imei,
+        onValueChange = { input ->
+            if (input.all { it.isDigit() } && input.length <= charLimitImei) {
+                onImeiChange(input)
+            }
+            onImeiErrorChange(input.length < charLimitImei)
+        },
+        label = { Text(stringResource(R.string.consultar_imei)) },
+        placeholder = { Text(stringResource(R.string.consultar_imei)) },
+        supportingText = {
+            val remainingCharactersImei = charLimitImei - imei.length
+            if (imei.isNotEmpty() && remainingCharactersImei > 0) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.faltan) +" $remainingCharactersImei "+ stringResource(R.string.caracteres),
+                    textAlign = TextAlign.End,
+                )
+            }
+        },
+        isError = isErrorImei,
+        trailingIcon = {
+            if (isErrorImei)
+                Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+        },
+        keyboardActions = KeyboardActions { /* Validación del IMEI aquí */ },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun CheckboxRow(text: String) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        OutlinedCard(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.padding(10.dp)) {
+                    val checkedState = remember { mutableStateOf(true) }
+
+                    Checkbox(
+                        checked = checkedState.value,
+                        onCheckedChange = { checkedState.value = it }
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp),
+                        text = text,
+                        //color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ButtonRow(text: String, onClick: () -> Unit) {
+    Row() {
+        ElevatedButton(
+            modifier = Modifier.weight(1f),
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+        ) {
+            /*
+            Icon(
+                imageVector = Icons.Filled.Send,
+                contentDescription = "Favorite Icon",
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+             */
+            Text(
+                text = text,
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = TextStyle(fontSize = 18.sp)
+            )
+        }
+    }
+}
+
+
+
+
+
