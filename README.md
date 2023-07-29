@@ -6,8 +6,11 @@ Arquitectura: Clean arquitecture y MVVM
 Librerias : 
 
 Retrofit 2 
+
 Dagger hilt 
+
 Live Data
+
 Navigation
 
 
